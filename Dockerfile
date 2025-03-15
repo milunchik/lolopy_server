@@ -1,11 +1,11 @@
-# Using 21 version of JDK
-FROM openjdk:21-jdk-slim
+# Use an OpenJDK image to run the Spring Boot application
+FROM openjdk:23-jdk-slim
 
-# Copying of jar-file
+# Copy the JAR file built by Maven or Gradle
 COPY target/server-0.0.1-SNAPSHOT.jar server.jar
 
-# Opening of port
-EXPOSE 8000
+# Expose the application port
+EXPOSE 5000
 
-# Starting server
-ENTRYPOINT ["java", "-jar", "/server.jar"]
+# Run the JAR file
+ENTRYPOINT ["java", "-jar", "server.jar"]

@@ -1,0 +1,20 @@
+services:
+  server:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/lolopy
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=ritipe45
+
+  postgres:
+    image: "postgres:latest"
+    environment:
+      - "POSTGRES_DB=lolopy"
+      - "POSTGRES_PASSWORD=ritipe45"
+      - "POSTGRES_USER=postgres"
+    ports:
+      - "5432:5432"
