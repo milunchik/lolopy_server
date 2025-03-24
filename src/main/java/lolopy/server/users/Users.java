@@ -1,11 +1,19 @@
 package lolopy.server.users;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+// import lolopy.server.profiles.Profiles;
+// import lolopy.server.trips.Trips;
 import lombok.Data;
 
 @Entity
@@ -20,14 +28,24 @@ public class Users {
     private String name;
     private String password;
 
+    @ManyToMany
+    @JoinTable(name = "user_trip", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "trip_id"))
+    private List<Long> tripIds;
+
+    @OneToOne
+    @JoinColumn(name = "profile_id")
+    private Long profileId;
+
     public Users() {
     }
 
-    public Users(Long id, String name, String email, String password) {
+    public Users(Long id, String name, String email, String password, List<Long> tripIds, Long profileId) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.tripIds = tripIds;
+        this.profileId = profileId;
     }
 
     public Users(String email, String name, String password) {
@@ -73,14 +91,29 @@ public class Users {
         this.password = password;
     }
 
+    public List<Long> getTrip() {
+        return tripIds;
+    }
+
+    public void setTripIds(List<Long> tripIds) {
+        this.tripIds = tripIds;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", password=" + password +
+                ", password=" + password + tripIds +
                 '}';
     }
-
 }

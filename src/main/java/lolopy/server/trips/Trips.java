@@ -1,9 +1,12 @@
 package lolopy.server.trips;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -16,7 +19,7 @@ public class Trips {
     private Long id;
     private String country;
     private String price;
-    private String category;
+    private String category; // incoming/completed
     private String shortDescription;
     private String longDescription;
     private String capacity;
@@ -25,12 +28,16 @@ public class Trips {
     private String accommodation;
     private String date;
 
+    @ManyToMany(mappedBy = "tripIds")
+    private List<Long> user;
+
     public Trips() {
     }
 
     public Trips(Long id, String country, String price, String category, String shortDescription,
             String longDescription,
-            String capacity, String foodPlace, String transport, String accommodation, String date) {
+            String capacity, String foodPlace, String transport, String accommodation, String date,
+            List<Long> user) {
         this.id = id;
         this.country = country;
         this.price = price;
@@ -42,6 +49,7 @@ public class Trips {
         this.transport = transport;
         this.accommodation = accommodation;
         this.date = date;
+        this.user = user;
     }
 
     public Long getId() {
@@ -130,5 +138,13 @@ public class Trips {
 
     public void setTransport(String transport) {
         this.transport = transport;
+    }
+
+    public List<Long> getUser() {
+        return user;
+    }
+
+    public void setUser(List<Long> user) {
+        this.user = user;
     }
 }
