@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lolopy.server.users.Users;
 
 @Entity
 @Table(name = "trips")
@@ -28,8 +29,8 @@ public class Trips {
     private String accommodation;
     private String date;
 
-    @ManyToMany(mappedBy = "tripIds")
-    private List<Long> user;
+    @ManyToMany(mappedBy = "trips")
+    private List<Users> users;
 
     public Trips() {
     }
@@ -37,7 +38,7 @@ public class Trips {
     public Trips(Long id, String country, String price, String category, String shortDescription,
             String longDescription,
             String capacity, String foodPlace, String transport, String accommodation, String date,
-            List<Long> user) {
+            List<Users> user) {
         this.id = id;
         this.country = country;
         this.price = price;
@@ -49,7 +50,23 @@ public class Trips {
         this.transport = transport;
         this.accommodation = accommodation;
         this.date = date;
-        this.user = user;
+        this.users = user;
+    }
+
+    public Trips(String country, String price, String category, String shortDescription,
+            String longDescription,
+            String capacity, String foodPlace, String transport, String accommodation, String date) {
+        this.country = country;
+        this.price = price;
+        this.category = category;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
+        this.capacity = capacity;
+        this.foodPlace = foodPlace;
+        this.transport = transport;
+        this.accommodation = accommodation;
+        this.date = date;
+
     }
 
     public Long getId() {
@@ -140,11 +157,11 @@ public class Trips {
         this.transport = transport;
     }
 
-    public List<Long> getUser() {
-        return user;
+    public List<Users> getUser() {
+        return users;
     }
 
-    public void setUser(List<Long> user) {
-        this.user = user;
+    public void setUser(List<Users> user) {
+        this.users = user;
     }
 }

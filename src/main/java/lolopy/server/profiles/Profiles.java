@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lolopy.server.users.Users;
 
 @Entity
 @Table(name = "profiles")
@@ -22,17 +23,23 @@ public class Profiles {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private Long userId;
+    private Users user;
 
     public Profiles() {
     }
 
-    public Profiles(Long id, String name, String phone, String passport, Long userId) {
+    public Profiles(Long id, String name, String phone, String passport, Users userId) {
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.passport = passport;
-        this.userId = userId;
+        this.user = userId;
+    }
+
+    public Profiles(String name, String phone, String passport) {
+        this.name = name;
+        this.phone = phone;
+        this.passport = passport;
     }
 
     public Long getId() {
@@ -67,12 +74,12 @@ public class Profiles {
         this.phone = phone;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Users getUserId() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserId(Users userId) {
+        this.user = userId;
     }
 
 }

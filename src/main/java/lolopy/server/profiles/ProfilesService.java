@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class ProfilesService {
 
     public List<Profiles> getProfiles() {
-        return List.of(new Profiles(2L, "emiliia", "0123456789", "GRDHD456", 1L));
+        return List.of(new Profiles("emiliia", "0123456789", "GRDHD456"));
     }
 
 }
