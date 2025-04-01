@@ -1,20 +1,25 @@
-package lolopy.server.users;
+// package lolopy.server.users;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+// import java.util.Optional;
 
-@Configuration
-public class UsersConfig {
+// import org.springframework.boot.CommandLineRunner;
+// import org.springframework.context.annotation.Configuration;
 
-    @Bean
-    CommandLineRunner commandLineRunner(UsersRepository usersRepository) {
+// @Configuration
+// public class UsersConfig {
 
-        return args -> {
-            Users user = new Users("emiliia", "emiliia@gmail.com",
-                    "emiliia@gmail.com");
+// // @Bean
+// CommandLineRunner commandLineRunner(UsersRepository usersRepository) {
 
-            usersRepository.save(user);
-        };
-    }
-}
+// return args -> {
+// Optional<Users> existingUser =
+// usersRepository.findUserByEmail("emiliia@gmail.com");
+// if (existingUser.isEmpty()) {
+// Users user = new Users("emiliia@gmail.com", "emiliia", "emiliia@gmail.com");
+// usersRepository.save(user);
+// } else {
+// System.out.println("User already exists, skipping insertion.");
+// }
+// };
+// }
+// }

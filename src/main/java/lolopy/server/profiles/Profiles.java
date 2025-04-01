@@ -1,5 +1,9 @@
 package lolopy.server.profiles;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,23 +21,32 @@ public class Profiles {
     @SequenceGenerator(name = "profiles_sequence", sequenceName = "profiles_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "profiles_sequence")
     private Long id;
+
+    @JsonProperty("name")
+    @Column()
     private String name;
+
+    @JsonProperty("phone")
+    @Column()
     private String phone;
+
+    @JsonProperty("passport")
+    @Column()
     private String passport;
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private Users user;
 
     public Profiles() {
     }
 
-    public Profiles(Long id, String name, String phone, String passport, Users userId) {
+    public Profiles(Long id, String name, String phone, String passport) {
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.passport = passport;
-        this.user = userId;
     }
 
     public Profiles(String name, String phone, String passport) {
@@ -72,14 +85,6 @@ public class Profiles {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public Users getUserId() {
-        return user;
-    }
-
-    public void setUserId(Users userId) {
-        this.user = userId;
     }
 
 }

@@ -2,7 +2,10 @@ package lolopy.server.users;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,12 +28,21 @@ public class Users {
     @SequenceGenerator(name = "users_sequence", sequenceName = "users_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_sequence")
     private Long id;
+
+    @JsonProperty("email")
+    @Column(nullable = false)
     private String email;
+
+    @JsonProperty("name")
+    @Column(nullable = false)
     private String name;
+
+    @JsonProperty("password")
+    @Column(nullable = false)
     private String password;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id")
     private Profiles profile;
 
     @ManyToMany
@@ -49,17 +61,16 @@ public class Users {
         this.profile = profile;
     }
 
-    public Users(String name, String email, String password, List<Trips> trips, Profiles profile) {
+    public Users(String name, String email, String password, List<Trips> trips) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.trips = trips;
-        this.profile = profile;
     }
 
-    public Users(String email, String name, String password) {
-        this.email = email;
+    public Users(String name, String email, String password) {
         this.name = name;
+        this.email = email;
         this.password = password;
     }
 
@@ -90,6 +101,9 @@ public class Users {
 
     public void setName(String name) {
         this.name = name;
+        // if (this.profile != null) {
+        // this.profile.setName(name);
+        // }
     }
 
     public String getPassword() {
@@ -108,11 +122,11 @@ public class Users {
         this.trips = trip;
     }
 
-    public Profiles getProfileId() {
+    public Profiles getProfile() {
         return profile;
     }
 
-    public void setProfileId(Profiles profile) {
+    public void setProfile(Profiles profile) {
         this.profile = profile;
     }
 

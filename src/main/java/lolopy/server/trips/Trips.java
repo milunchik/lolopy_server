@@ -2,13 +2,24 @@ package lolopy.server.trips;
 
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lolopy.server.enums.Enums.Accommodation;
+import lolopy.server.enums.Enums.Category;
+import lolopy.server.enums.Enums.FoodPlace;
+import lolopy.server.enums.Enums.Transport;
 import lolopy.server.users.Users;
 
 @Entity
@@ -18,27 +29,57 @@ public class Trips {
     @SequenceGenerator(name = "trips_sequence", sequenceName = "trips_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trips_sequence")
     private Long id;
+
+    @JsonProperty("country")
+    @Column(nullable = false)
     private String country;
-    private String price;
-    private String category; // incoming/completed
+
+    @JsonProperty("price")
+    @Column(nullable = false)
+    private int price;
+
+    @JsonProperty("category")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
+
+    @JsonProperty("shortDescription")
+    @Column(nullable = false)
     private String shortDescription;
+
+    @JsonProperty("longDescription")
+    @Column(nullable = false)
     private String longDescription;
+
+    @JsonProperty("capacity")
+    @Column(nullable = false)
     private String capacity;
-    private String foodPlace;
-    private String transport;
-    private String accommodation;
+
+    @JsonProperty("foodPlace")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FoodPlace foodPlace;
+
+    @JsonProperty("transport")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Transport transport;
+
+    @JsonProperty("accommodation")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Accommodation accommodation;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(nullable = false)
     private String date;
 
     @ManyToMany(mappedBy = "trips")
     private List<Users> users;
 
-    public Trips() {
-    }
-
-    public Trips(Long id, String country, String price, String category, String shortDescription,
-            String longDescription,
-            String capacity, String foodPlace, String transport, String accommodation, String date,
-            List<Users> user) {
+    public Trips(Long id, String country, int price, Category category, String shortDescription,
+            String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
+            Accommodation accommodation, String date, List<Users> users) {
         this.id = id;
         this.country = country;
         this.price = price;
@@ -50,12 +91,12 @@ public class Trips {
         this.transport = transport;
         this.accommodation = accommodation;
         this.date = date;
-        this.users = user;
+        this.users = users;
     }
 
-    public Trips(String country, String price, String category, String shortDescription,
-            String longDescription,
-            String capacity, String foodPlace, String transport, String accommodation, String date) {
+    public Trips(String country, int price, Category category, String shortDescription,
+            String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
+            Accommodation accommodation, String date) {
         this.country = country;
         this.price = price;
         this.category = category;
@@ -66,7 +107,9 @@ public class Trips {
         this.transport = transport;
         this.accommodation = accommodation;
         this.date = date;
+    }
 
+    public Trips() {
     }
 
     public Long getId() {
@@ -77,11 +120,11 @@ public class Trips {
         return country;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
@@ -93,7 +136,7 @@ public class Trips {
         return longDescription;
     }
 
-    public String getFoodPlace() {
+    public FoodPlace getFoodPlace() {
         return foodPlace;
     }
 
@@ -101,7 +144,7 @@ public class Trips {
         return capacity;
     }
 
-    public String getAccommodation() {
+    public Accommodation getAccommodation() {
         return accommodation;
     }
 
@@ -109,7 +152,7 @@ public class Trips {
         return date;
     }
 
-    public String getTransport() {
+    public Transport getTransport() {
         return transport;
     }
 
@@ -125,11 +168,11 @@ public class Trips {
         this.capacity = capacity;
     }
 
-    public void setAccommodation(String accommodation) {
+    public void setAccommodation(Accommodation accommodation) {
         this.accommodation = accommodation;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -137,7 +180,7 @@ public class Trips {
         this.date = date;
     }
 
-    public void setFoodPlace(String foodPlace) {
+    public void setFoodPlace(FoodPlace foodPlace) {
         this.foodPlace = foodPlace;
     }
 
@@ -145,7 +188,7 @@ public class Trips {
         this.longDescription = longDescription;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -153,7 +196,7 @@ public class Trips {
         this.shortDescription = shortDescription;
     }
 
-    public void setTransport(String transport) {
+    public void setTransport(Transport transport) {
         this.transport = transport;
     }
 
@@ -161,7 +204,7 @@ public class Trips {
         return users;
     }
 
-    public void setUser(List<Users> user) {
-        this.users = user;
+    public void setUser(List<Users> users) {
+        this.users = users;
     }
 }
