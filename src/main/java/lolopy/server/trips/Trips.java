@@ -17,7 +17,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lolopy.server.enums.Enums.Accommodation;
-import lolopy.server.enums.Enums.Category;
 import lolopy.server.enums.Enums.FoodPlace;
 import lolopy.server.enums.Enums.Transport;
 import lolopy.server.users.Users;
@@ -37,11 +36,6 @@ public class Trips {
     @JsonProperty("price")
     @Column(nullable = false)
     private int price;
-
-    @JsonProperty("category")
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Category category;
 
     @JsonProperty("shortDescription")
     @Column(nullable = false)
@@ -74,16 +68,20 @@ public class Trips {
     @Column(nullable = false)
     private String date;
 
+    @JsonProperty("photo")
+    @Column()
+    private String photo;
+
     @ManyToMany(mappedBy = "trips")
     private List<Users> users;
 
-    public Trips(Long id, String country, int price, Category category, String shortDescription,
+    public Trips(Long id, String country, int price, String shortDescription,
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
-            Accommodation accommodation, String date, List<Users> users) {
+            Accommodation accommodation, String date, List<Users> users, String photos) {
         this.id = id;
         this.country = country;
         this.price = price;
-        this.category = category;
+
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.capacity = capacity;
@@ -92,14 +90,14 @@ public class Trips {
         this.accommodation = accommodation;
         this.date = date;
         this.users = users;
+        this.photo = photos;
     }
 
-    public Trips(String country, int price, Category category, String shortDescription,
+    public Trips(String country, int price, String shortDescription,
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
-            Accommodation accommodation, String date) {
+            Accommodation accommodation, String date, String photos) {
         this.country = country;
         this.price = price;
-        this.category = category;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.capacity = capacity;
@@ -107,6 +105,7 @@ public class Trips {
         this.transport = transport;
         this.accommodation = accommodation;
         this.date = date;
+        this.photo = photos;
     }
 
     public Trips() {
@@ -124,8 +123,8 @@ public class Trips {
         return price;
     }
 
-    public Category getCategory() {
-        return category;
+    public String getPhoto() {
+        return photo;
     }
 
     public String getShortDescription() {
@@ -172,10 +171,6 @@ public class Trips {
         this.accommodation = accommodation;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
     public void setDate(String date) {
         this.date = date;
     }
@@ -206,5 +201,9 @@ public class Trips {
 
     public void setUser(List<Users> users) {
         this.users = users;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }
