@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +18,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lolopy.server.enums.Enums.Role;
 import lolopy.server.profiles.Profiles;
 import lolopy.server.trips.Trips;
 import lombok.Data;
@@ -28,6 +31,11 @@ public class Users {
     @SequenceGenerator(name = "users_sequence", sequenceName = "users_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_sequence")
     private Long id;
+
+    @JsonProperty("role")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @JsonProperty("email")
     @Column(nullable = false)
@@ -45,6 +53,9 @@ public class Users {
     @JoinColumn(name = "profile_id")
     private Profiles profile;
 
+    @Column()
+    private String photo;
+
     @ManyToMany
     @JoinTable(name = "user_trip", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "trip_id"))
     private List<Trips> trips;
@@ -52,26 +63,33 @@ public class Users {
     public Users() {
     }
 
-    public Users(Long id, String name, String email, String password, List<Trips> trips, Profiles profile) {
+    public Users(Long id, String name, String email, String password, List<Trips> trips, Profiles profile,
+            Role role, String photo) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.trips = trips;
         this.profile = profile;
+        this.role = role;
+        this.photo = photo;
     }
 
-    public Users(String name, String email, String password, List<Trips> trips) {
+    public Users(String name, String email, String password, List<Trips> trips, Role role, String photo) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.trips = trips;
+        this.role = role;
+        this.photo = photo;
+
     }
 
-    public Users(String name, String email, String password) {
+    public Users(String name, String email, String password, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public Users(String email, String password) {
@@ -101,9 +119,6 @@ public class Users {
 
     public void setName(String name) {
         this.name = name;
-        // if (this.profile != null) {
-        // this.profile.setName(name);
-        // }
     }
 
     public String getPassword() {
@@ -128,6 +143,14 @@ public class Users {
 
     public void setProfile(Profiles profile) {
         this.profile = profile;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     @Override

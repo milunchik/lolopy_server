@@ -13,7 +13,7 @@ public class Enums {
         HOTEL, HOSTEL
     }
 
-    public enum Category {
-        COMPLETED, INCOMING
+    public enum Role {
+        user, admin
     }
 }
