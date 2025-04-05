@@ -32,9 +32,10 @@ public class UsersService {
         if (userByEmail.isPresent()) {
             throw new RuntimeException("User already exists");
         }
+        Profiles profile = new Profiles(user.getName(), "Default Passport", "Default Phone");
 
-        Profiles profile = profilesService.createProfile(user.getName(), "Default Passport", "Default Phone");
-        user.setProfile(profile);
+        Profiles newProfile = profilesService.createProfile(profile);
+        user.setProfile(newProfile);
 
         // String hashedPassword = passwordEncoder.encode(user.getPassword());
         // System.out.println(hashedPassword);

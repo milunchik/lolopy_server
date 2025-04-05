@@ -18,13 +18,45 @@ public class ProfilesService {
         return profilesRepository.findAll();
     }
 
-    public Profiles createProfile(String name, String passport, String phone) {
-        Profiles profile = new Profiles(name, passport, phone);
+    public Profiles createProfile(Profiles profile) {
         return profilesRepository.save(profile);
     }
 
     public Optional<Profiles> getProfileById(Long id) {
         return profilesRepository.findById(id);
+    }
+
+    public Optional<Profiles> updateProfile(Long id, Profiles updatedProfile) {
+        Optional<Profiles> profile = profilesRepository.findById(id);
+
+        if (profile.isPresent()) {
+            Profiles existingProfile = profile.get();
+
+            if (updatedProfile.getName() != null) {
+                existingProfile.setName(profile.get().getName());
+            }
+            if (updatedProfile.getPassport() != null) {
+                existingProfile.setPassport(profile.get().getPassport());
+            }
+            if (updatedProfile.getClass() != null) {
+                existingProfile.setPhone(profile.get().getPhone());
+            }
+
+            profilesRepository.save(existingProfile);
+            return Optional.of(existingProfile);
+        }
+        return Optional.empty();
+    }
+
+    public boolean deleteProfile(Long id) {
+        Optional<Profiles> profile = profilesRepository.findById(id);
+
+        if (profile.isPresent()) {
+            profilesRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
