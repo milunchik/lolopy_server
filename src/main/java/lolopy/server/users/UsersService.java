@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,13 @@ import lolopy.server.profiles.ProfilesService;
 public class UsersService {
     private final UsersRepository usersRepository;
     private final ProfilesService profilesService;
+    private PasswordEncoder passwordEncoder;
 
-    // private PasswordEncoder passwordEncoder;
-
-    public UsersService(UsersRepository usersRepository, ProfilesService profilesService) {
+    public UsersService(UsersRepository usersRepository, ProfilesService profilesService,
+            PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
         this.profilesService = profilesService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Users> getUsers() {
@@ -37,9 +39,8 @@ public class UsersService {
         Profiles newProfile = profilesService.createProfile(profile);
         user.setProfile(newProfile);
 
-        // String hashedPassword = passwordEncoder.encode(user.getPassword());
-        // System.out.println(hashedPassword);
-        // user.setPassword(hashedPassword);
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
 
         usersRepository.save(user);
 
@@ -83,7 +84,7 @@ public class UsersService {
             }
 
             if (updatedUser.getPassword() != null) {
-                existingUser.setPassword(updatedUser.getPassword());
+                existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             }
 
             if (updatedUser.getRole() != null) {
