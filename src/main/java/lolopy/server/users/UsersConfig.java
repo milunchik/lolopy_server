@@ -18,7 +18,7 @@ public class UsersConfig {
             Optional<Users> existingUser = usersRepository.findUserByEmail("emiliia@gmail.com");
             if (existingUser.isEmpty()) {
                 Users user = new Users("emiliia456879@gmail.com", "emiliia", "emiliiaemiliia456879@gmail.com",
-                        Role.user);
+                        Role.USER);
 
                 // user.setPassword(passwordEncoder().encode("5a1c5523-bcfa-4158-8fbd-1b79c67139cb"));
 

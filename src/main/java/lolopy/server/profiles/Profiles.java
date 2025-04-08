@@ -34,6 +34,10 @@ public class Profiles {
     @Column()
     private String passport;
 
+    @JsonProperty("photo")
+    @Column()
+    private String photo;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference

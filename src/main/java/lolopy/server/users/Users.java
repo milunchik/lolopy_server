@@ -53,9 +53,6 @@ public class Users {
     @JoinColumn(name = "profile_id")
     private Profiles profile;
 
-    @Column()
-    private String photo;
-
     @ManyToMany
     @JoinTable(name = "user_trip", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "trip_id"))
     private List<Trips> trips;
@@ -64,7 +61,7 @@ public class Users {
     }
 
     public Users(Long id, String name, String email, String password, List<Trips> trips, Profiles profile,
-            Role role, String photo) {
+            Role role) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -72,16 +69,14 @@ public class Users {
         this.trips = trips;
         this.profile = profile;
         this.role = role;
-        this.photo = photo;
     }
 
-    public Users(String name, String email, String password, List<Trips> trips, Role role, String photo) {
+    public Users(String name, String email, String password, List<Trips> trips, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.trips = trips;
         this.role = role;
-        this.photo = photo;
 
     }
 
@@ -143,14 +138,6 @@ public class Users {
 
     public void setProfile(Profiles profile) {
         this.profile = profile;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
     }
 
     @Override

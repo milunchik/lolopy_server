@@ -14,6 +14,6 @@ public class Enums {
     }
 
     public enum Role {
-        user, admin
+        USER, ADMIN
     }
 }

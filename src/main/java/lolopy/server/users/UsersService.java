@@ -90,10 +90,6 @@ public class UsersService {
                 existingUser.setRole(updatedUser.getRole());
             }
 
-            if (updatedUser.getPhoto() != null) {
-                existingUser.setPhoto(updatedUser.getPhoto());
-            }
-
             usersRepository.save(existingUser);
             return Optional.of(existingUser);
         }

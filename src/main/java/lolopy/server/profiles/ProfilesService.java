@@ -26,6 +26,10 @@ public class ProfilesService {
         return profilesRepository.findById(id);
     }
 
+    public Optional<Profiles> getProfileByName(String name) {
+        return profilesRepository.findProfileByName(name);
+    }
+
     public Optional<Profiles> updateProfile(Long id, Profiles updatedProfile) {
         Optional<Profiles> profile = profilesRepository.findById(id);
 

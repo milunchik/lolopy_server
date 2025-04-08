@@ -60,9 +60,6 @@ public class TripsService {
             if (updatedTripDetails.getPrice() != 0) {
                 existingTrip.setPrice(updatedTripDetails.getPrice());
             }
-            if (updatedTripDetails.getShortDescription() != null) {
-                existingTrip.setShortDescription(updatedTripDetails.getShortDescription());
-            }
             if (updatedTripDetails.getLongDescription() != null) {
                 existingTrip.setLongDescription(updatedTripDetails.getLongDescription());
             }

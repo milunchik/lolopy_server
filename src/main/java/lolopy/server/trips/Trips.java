@@ -41,10 +41,6 @@ public class Trips {
     @Column(nullable = false)
     private int price;
 
-    @JsonProperty("shortDescription")
-    @Column(nullable = false)
-    private String shortDescription;
-
     @JsonProperty("longDescription")
     @Column(nullable = false)
     private String longDescription;
@@ -79,14 +75,13 @@ public class Trips {
     @ManyToMany(mappedBy = "trips")
     private List<Users> users;
 
-    public Trips(Long id, String country, int price, String shortDescription,
+    public Trips(Long id, String country, int price, 
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
             Accommodation accommodation, String date, List<Users> users, String photos, String city) {
         this.id = id;
         this.country = country;
         this.city = city;
         this.price = price;
-        this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.capacity = capacity;
         this.foodPlace = foodPlace;
@@ -97,13 +92,12 @@ public class Trips {
         this.photo = photos;
     }
 
-    public Trips(String country, int price, String shortDescription,
+    public Trips(String country, int price, 
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
             Accommodation accommodation, String date, String photos, String city) {
         this.country = country;
         this.city = city;
         this.price = price;
-        this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.capacity = capacity;
         this.foodPlace = foodPlace;
@@ -130,10 +124,6 @@ public class Trips {
 
     public String getPhoto() {
         return photo;
-    }
-
-    public String getShortDescription() {
-        return shortDescription;
     }
 
     public String getLongDescription() {
@@ -190,10 +180,6 @@ public class Trips {
 
     public void setPrice(int price) {
         this.price = price;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
     }
 
     public void setTransport(Transport transport) {
