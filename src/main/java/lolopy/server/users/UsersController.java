@@ -67,7 +67,7 @@ public class UsersController {
         }
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/id/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable Long userId) {
         try {
             Optional<Users> userOptional = usersService.getUserById(userId);

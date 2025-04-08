@@ -33,6 +33,10 @@ public class Trips {
     @Column(nullable = false)
     private String country;
 
+    @JsonProperty("city")
+    @Column(nullable = false)
+    private String city;
+
     @JsonProperty("price")
     @Column(nullable = false)
     private int price;
@@ -77,11 +81,11 @@ public class Trips {
 
     public Trips(Long id, String country, int price, String shortDescription,
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
-            Accommodation accommodation, String date, List<Users> users, String photos) {
+            Accommodation accommodation, String date, List<Users> users, String photos, String city) {
         this.id = id;
         this.country = country;
+        this.city = city;
         this.price = price;
-
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.capacity = capacity;
@@ -95,8 +99,9 @@ public class Trips {
 
     public Trips(String country, int price, String shortDescription,
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
-            Accommodation accommodation, String date, String photos) {
+            Accommodation accommodation, String date, String photos, String city) {
         this.country = country;
+        this.city = city;
         this.price = price;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
@@ -205,5 +210,13 @@ public class Trips {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

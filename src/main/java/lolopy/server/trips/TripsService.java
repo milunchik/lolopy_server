@@ -53,6 +53,10 @@ public class TripsService {
             if (updatedTripDetails.getCountry() != null) {
                 existingTrip.setCountry(updatedTripDetails.getCountry());
             }
+
+            if (updatedTripDetails.getCity() != null) {
+                existingTrip.setCity(updatedTripDetails.getCity());
+            }
             if (updatedTripDetails.getPrice() != 0) {
                 existingTrip.setPrice(updatedTripDetails.getPrice());
             }
