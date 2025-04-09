@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -73,9 +74,10 @@ public class Trips {
     private String photo;
 
     @ManyToMany(mappedBy = "trips")
+    @JsonIgnore
     private List<Users> users;
 
-    public Trips(Long id, String country, int price, 
+    public Trips(Long id, String country, int price,
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
             Accommodation accommodation, String date, List<Users> users, String photos, String city) {
         this.id = id;
@@ -92,7 +94,7 @@ public class Trips {
         this.photo = photos;
     }
 
-    public Trips(String country, int price, 
+    public Trips(String country, int price,
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
             Accommodation accommodation, String date, String photos, String city) {
         this.country = country;
