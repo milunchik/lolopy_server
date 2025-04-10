@@ -2,12 +2,13 @@ package lolopy.server.trips;
 
 public class TripDTO {
     private Long id;
-    private String country;
     private String date;
 
-    public TripDTO(Long id, String date, String country) {
+    public TripDTO() {
+    }
+
+    public TripDTO(Long id, String date) {
         this.id = id;
-        this.country = country;
         this.date = date;
     }
 
@@ -27,11 +28,4 @@ public class TripDTO {
         this.id = id;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
 }

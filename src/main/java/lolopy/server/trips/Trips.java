@@ -1,10 +1,6 @@
 package lolopy.server.trips;
 
-import java.util.List;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -14,13 +10,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lolopy.server.enums.Enums.Accommodation;
 import lolopy.server.enums.Enums.FoodPlace;
 import lolopy.server.enums.Enums.Transport;
-import lolopy.server.users.Users;
 
 @Entity
 @Table(name = "trips")
@@ -73,13 +67,13 @@ public class Trips {
     @Column()
     private String photo;
 
-    @ManyToMany(mappedBy = "trips")
-    @JsonIgnore
-    private List<Users> users;
+    // @ManyToMany(mappedBy = "trips")
+    // @JsonIgnoreProperties("trips")
+    // private List<Users> users;
 
     public Trips(Long id, String country, int price,
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
-            Accommodation accommodation, String date, List<Users> users, String photos, String city) {
+            Accommodation accommodation, String date, String photos, String city) {
         this.id = id;
         this.country = country;
         this.city = city;
@@ -90,7 +84,7 @@ public class Trips {
         this.transport = transport;
         this.accommodation = accommodation;
         this.date = date;
-        this.users = users;
+        // this.users = users;
         this.photo = photos;
     }
 
@@ -188,13 +182,13 @@ public class Trips {
         this.transport = transport;
     }
 
-    public List<Users> getUser() {
-        return users;
-    }
+    // public List<Users> getUser() {
+    // return users;
+    // }
 
-    public void setUser(List<Users> users) {
-        this.users = users;
-    }
+    // public void setUser(List<Users> users) {
+    // this.users = users;
+    // }
 
     public void setPhoto(String photo) {
         this.photo = photo;

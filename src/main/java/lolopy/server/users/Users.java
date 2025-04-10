@@ -2,6 +2,8 @@ package lolopy.server.users;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -55,6 +57,7 @@ public class Users {
 
     @ManyToMany
     @JoinTable(name = "user_trip", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "trip_id"))
+    @JsonIgnoreProperties("users")
     private List<Trips> trips;
 
     public Users() {

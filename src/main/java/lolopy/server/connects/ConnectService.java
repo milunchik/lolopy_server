@@ -31,17 +31,13 @@ public class ConnectService {
                 user.getTrips().add(trip);
             }
 
-            if (!trip.getUser().contains(user)) {
-                trip.getUser().add(user);
-            }
-
             Users savedUser = usersRepository.save(user);
 
             UserDTO dto = new UserDTO();
             dto.setId(savedUser.getId());
             dto.setEmail(savedUser.getEmail());
             dto.setTrips(savedUser.getTrips().stream()
-                    .map(t -> new TripDTO(t.getId(), t.getCountry(), t.getDate()))
+                    .map(t -> new TripDTO(t.getId(), t.getDate()))
                     .collect(Collectors.toList()));
 
             return dto;
