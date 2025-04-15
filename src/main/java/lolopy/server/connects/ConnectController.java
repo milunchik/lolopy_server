@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping(path = "api/v1/connect")
+@RequestMapping(path = "api/v1/book")
 public class ConnectController {
 
     private final ConnectService connectService;

@@ -1,6 +1,5 @@
-package lolopy.server.users;
+package lolopy.server.dtos;
 
-import lolopy.server.trips.TripDTO;
 import java.util.List;
 
 public class UserDTO {

@@ -3,8 +3,13 @@ package lolopy.server.users;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,14 +19,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lolopy.server.auth.JwtService;
+import lolopy.server.auth.MyUserDetailService;
+import lolopy.server.dtos.LoginForm;
+
 @RestController
 @RequestMapping(path = "api/v1/user")
 public class UsersController {
 
     private final UsersService usersService;
+    @Autowired
+    private final JwtService jwtService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private MyUserDetailService myUserDetailService;
 
-    public UsersController(UsersService usersService) {
+    public UsersController(UsersService usersService, JwtService jwtService,
+            AuthenticationManager authenticationManager, MyUserDetailService myUserDetailService) {
         this.usersService = usersService;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+        this.myUserDetailService = myUserDetailService;
     }
 
     public class UserAlreadyExistsException extends RuntimeException {
@@ -64,6 +83,24 @@ public class UsersController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/token")
+    public ResponseEntity<?> authenticateAndGetToken(@RequestBody LoginForm loginForm) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginForm.email(), loginForm.password()));
+
+        if (authentication.isAuthenticated()) {
+            // UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            // String token = jwtService.generateToken(userDetails);
+            // return ResponseEntity.ok(token);
+
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body(jwtService.generateToken(myUserDetailService.loadUserByUsername(loginForm.email())));
+
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
         }
     }
 

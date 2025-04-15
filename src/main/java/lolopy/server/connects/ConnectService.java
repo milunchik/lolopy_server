@@ -1,5 +1,7 @@
 package lolopy.server.connects;
 
+import lolopy.server.dtos.TripDTO;
+import lolopy.server.dtos.UserDTO;
 import lolopy.server.trips.*;
 import lolopy.server.users.*;
 

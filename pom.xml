@@ -110,6 +110,21 @@
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
 
+        <!-- jjwt API -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+
+        <!-- jjwt Implementation -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

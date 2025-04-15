@@ -1,4 +1,4 @@
-package lolopy.server.trips;
+package lolopy.server.dtos;
 
 public class TripDTO {
     private Long id;

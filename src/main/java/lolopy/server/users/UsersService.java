@@ -3,9 +3,13 @@ package lolopy.server.users;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lolopy.server.profiles.Profiles;
 import lolopy.server.profiles.ProfilesService;
 
@@ -45,7 +49,7 @@ public class UsersService {
         return user;
     }
 
-    public Users getUser(Users user) {
+    public Users getUser(Users user, HttpServletResponse response) {
         Optional<Users> userByEmail = usersRepository.findUserByEmail(user.getEmail());
 
         if (userByEmail.isEmpty()) {
@@ -104,6 +108,19 @@ public class UsersService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
+        Optional<Users> user = usersRepository.findUserByEmail(email);
+        if (user.isPresent()) {
+            var userObj = user.get();
+
+            return User.builder().username(userObj.getEmail()).password(userObj.getPassword())
+                    .roles(userObj.getRole().name())
+                    .build();
+        } else {
+            throw new UsernameNotFoundException(email);
         }
     }
 }

@@ -67,10 +67,6 @@ public class Trips {
     @Column()
     private String photo;
 
-    // @ManyToMany(mappedBy = "trips")
-    // @JsonIgnoreProperties("trips")
-    // private List<Users> users;
-
     public Trips(Long id, String country, int price,
             String longDescription, String capacity, FoodPlace foodPlace, Transport transport,
             Accommodation accommodation, String date, String photos, String city) {
@@ -84,7 +80,6 @@ public class Trips {
         this.transport = transport;
         this.accommodation = accommodation;
         this.date = date;
-        // this.users = users;
         this.photo = photos;
     }
 
@@ -181,14 +176,6 @@ public class Trips {
     public void setTransport(Transport transport) {
         this.transport = transport;
     }
-
-    // public List<Users> getUser() {
-    // return users;
-    // }
-
-    // public void setUser(List<Users> users) {
-    // this.users = users;
-    // }
 
     public void setPhoto(String photo) {
         this.photo = photo;

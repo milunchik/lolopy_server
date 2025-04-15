@@ -81,10 +81,6 @@ public class TripsService {
             if (updatedTripDetails.getPhoto() != null) {
                 existingTrip.setPhoto(updatedTripDetails.getPhoto());
             }
-            if (updatedTripDetails.getUser() != null) {
-                existingTrip.setUser(updatedTripDetails.getUser());
-            }
-
             tripsRepository.save(existingTrip);
             return Optional.of(existingTrip);
         }
