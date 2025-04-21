@@ -13,13 +13,13 @@ import lolopy.server.users.UsersService;
 
 @Service
 public class MyUserDetailService implements UserDetailsService {
-    @Autowired
-    public MyUserDetailRepository repository;
 
+    public MyUserDetailRepository repository;
     private final UsersService usersService;
 
     public MyUserDetailService(UsersService usersService) {
         this.usersService = usersService;
+        this.repository = repository;
     }
 
     @Override

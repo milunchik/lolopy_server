@@ -18,12 +18,12 @@ public record LoginForm(String email, String password) {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this)
+        if (this == obj)
             return true;
-        if (obj == null || obj.getClass() != this.getClass())
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        var that = (LoginForm) obj;
-        return Objects.equals(this.email, this.password) && Objects.equals(this.password, that.password);
+        LoginForm that = (LoginForm) obj;
+        return Objects.equals(this.email, that.email) && Objects.equals(this.password, that.password);
     }
 
     @Override

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,9 +91,6 @@ public class UsersController {
                 .authenticate(new UsernamePasswordAuthenticationToken(loginForm.email(), loginForm.password()));
 
         if (authentication.isAuthenticated()) {
-            // UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            // String token = jwtService.generateToken(userDetails);
-            // return ResponseEntity.ok(token);
 
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(jwtService.generateToken(myUserDetailService.loadUserByUsername(loginForm.email())));
