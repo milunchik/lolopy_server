@@ -85,7 +85,4 @@ public class TripsController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }
     }
-
-    
-
 }

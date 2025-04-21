@@ -12,24 +12,48 @@ import javax.crypto.SecretKey;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-    public static final String SECRET = "6668C06997B6E0AC8DF05B6353293C7435E4BD6FBBCC4F3DD01DA2240FD86848B41332669F2EDEDD0E730DE1B6B81B7E5A33B393BC8F8632132F948DDECF617D";
+    public static final String SECRET = "5rWBcjsnkL6v9ZvjXS2BaDz7B9TESG6BAFW0GmKxY1n9OuCuFZarx4JQw8jVRov/TFMhxDpfSICFrDKvCIcmsg==";
 
     private static final long VALIDITY = TimeUnit.MINUTES.toMillis(60);
 
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(generateSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
     public String generateToken(UserDetails userDetails) {
         Map<String, String> claims = new HashMap<>();
-        claims.put("iss", "http;//secure.genuiecoder.com");
+        claims.put("iss", "http://secure.genuiecoder.com");
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plusMillis(VALIDITY)))
                 .signWith(generateSecretKey()).compact();
+    }
+
+    public String extractUserEmail(String jwt) {
+        Claims claims = Jwts.parser()
+                .verifyWith(generateSecretKey())
+                .build()
+                .parseSignedClaims(jwt)
+                .getPayload();
+
+        return claims.getSubject();
+    }
+
+    public boolean isTokenValid(String jwt) {
+        Claims claims = getClaims(jwt);
+        return claims.getExpiration().after(Date.from(Instant.now()));
     }
 
     private SecretKey generateSecretKey() {

@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lolopy.server.profiles.Profiles;
 import lolopy.server.profiles.ProfilesService;
 
@@ -49,7 +48,7 @@ public class UsersService {
         return user;
     }
 
-    public Users getUser(Users user, HttpServletResponse response) {
+    public Users getUser(Users user) {
         Optional<Users> userByEmail = usersRepository.findUserByEmail(user.getEmail());
 
         if (userByEmail.isEmpty()) {
@@ -65,6 +64,10 @@ public class UsersService {
 
     public Optional<Users> getUserByEmail(String email) {
         return usersRepository.findUserByEmail(email);
+    }
+
+    public Optional<Users> getUserbyName(String name) {
+        return usersRepository.findUserByName(name);
     }
 
     public Optional<Users> updateUser(Long id, Users updatedUser) {

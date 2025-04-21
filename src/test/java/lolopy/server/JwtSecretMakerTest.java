@@ -3,18 +3,16 @@ package lolopy.server;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.MacAlgorithm;
 import javax.crypto.SecretKey;
-import jakarta.xml.bind.DatatypeConverter;
 import org.junit.jupiter.api.Test;
 
 public class JwtSecretMakerTest {
-
     @Test
     public void generateSecretKey() {
         MacAlgorithm algorithm = Jwts.SIG.HS512;
         SecretKey key = algorithm.key().build();
 
-        String encodedKey = DatatypeConverter.printHexBinary(key.getEncoded());
-        System.out.printf("\nKey=[%s]\n", encodedKey);
+        String base64Key = java.util.Base64.getEncoder().encodeToString(key.getEncoded());
+        System.out.println("\nBase64 Key = " + base64Key);
     }
 
 }

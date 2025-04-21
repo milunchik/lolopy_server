@@ -1,6 +1,8 @@
 package lolopy.server.users;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lolopy.server.auth.JwtService;
 import lolopy.server.auth.MyUserDetailService;
 import lolopy.server.dtos.LoginForm;
+import lolopy.server.dtos.getUserDTO;
 
 @RestController
 @RequestMapping(path = "api/v1/user")
@@ -63,40 +66,52 @@ public class UsersController {
     public ResponseEntity<?> createUser(@RequestBody Users user) {
         try {
             usersService.createUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(user);
+            String message = "User created";
+            return ResponseEntity.status(HttpStatus.CREATED).body(message);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> getUser(@RequestBody Users request) {
+    public ResponseEntity<?> loginAndGenerateToken(@RequestBody LoginForm loginForm) {
         try {
-            Optional<Users> userOptional = usersService.getUserByEmail(request.getEmail());
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginForm.email(), loginForm.password()));
 
-            if (userOptional.isPresent()) {
-                return ResponseEntity.ok(userOptional.get());
+            if (authentication.isAuthenticated()) {
+                Optional<Users> userOpt = usersService.getUserbyName(loginForm.email());
+
+                if (userOpt.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+                }
+
+                Users user = userOpt.get();
+
+                String token = jwtService.generateToken(
+                        org.springframework.security.core.userdetails.User
+                                .builder()
+                                .username(user.getName())
+                                .password(user.getPassword())
+                                .roles(user.getRole().name())
+                                .build());
+
+                getUserDTO userDTO = new getUserDTO(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getName(),
+                        user.getRole().name());
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("token", token);
+                response.put("user", userDTO);
+
+                return ResponseEntity.ok(response);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
             }
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/token")
-    public ResponseEntity<?> authenticateAndGetToken(@RequestBody LoginForm loginForm) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginForm.email(), loginForm.password()));
-
-        if (authentication.isAuthenticated()) {
-
-            return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .body(jwtService.generateToken(myUserDetailService.loadUserByUsername(loginForm.email())));
-
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
         }
     }
 
@@ -105,7 +120,12 @@ public class UsersController {
         try {
             Optional<Users> userOptional = usersService.getUserById(userId);
             if (userOptional.isPresent()) {
-                return ResponseEntity.ok(userOptional.get());
+                Users user = userOptional.get();
+
+                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
+                        user.getProfile(), user.getTrips());
+
+                return ResponseEntity.ok(dto);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
@@ -114,12 +134,34 @@ public class UsersController {
         }
     }
 
-    @GetMapping("/email")
-    public ResponseEntity<?> getUserByEmail(@RequestBody String email) {
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
         try {
             Optional<Users> userOptional = usersService.getUserByEmail(email);
             if (userOptional.isPresent()) {
-                return ResponseEntity.ok(userOptional.get());
+                Users user = userOptional.get();
+                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name());
+
+                return ResponseEntity.ok(dto);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<?> getUserByName(@PathVariable String name) {
+        try {
+            Optional<Users> userOptional = usersService.getUserbyName(name);
+            if (userOptional.isPresent()) {
+                Users user = userOptional.get();
+
+                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
+                        user.getProfile(), user.getTrips());
+
+                return ResponseEntity.ok(dto);
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User not found");
             }
@@ -134,7 +176,12 @@ public class UsersController {
             Optional<Users> userOptional = usersService.updateUser(id, updatedUser);
 
             if (userOptional.isPresent()) {
-                return ResponseEntity.status(HttpStatus.OK).body(userOptional.get());
+                Users user = userOptional.get();
+
+                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
+                        user.getProfile(), user.getTrips());
+
+                return ResponseEntity.ok(dto);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
             }
