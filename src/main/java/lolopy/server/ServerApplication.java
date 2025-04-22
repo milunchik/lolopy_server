@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @EntityScan(basePackages = { "lolopy.server.profiles", "lolopy.server.trips",
-		"lolopy.server.users" })
+		"lolopy.server.users", "lolopy.server.auth" })
 
 @RestController
 public class ServerApplication {

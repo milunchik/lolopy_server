@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lolopy.server.auth.JwtService;
 import lolopy.server.auth.MyUserDetailService;
+import lolopy.server.auth.token.TokenService;
 import lolopy.server.dtos.LoginForm;
 import lolopy.server.dtos.getUserDTO;
 
@@ -30,19 +32,27 @@ import lolopy.server.dtos.getUserDTO;
 public class UsersController {
 
     private final UsersService usersService;
+
     @Autowired
     private final JwtService jwtService;
+
+    @Autowired
+    private final TokenService tokenService;
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private MyUserDetailService myUserDetailService;
 
     public UsersController(UsersService usersService, JwtService jwtService,
-            AuthenticationManager authenticationManager, MyUserDetailService myUserDetailService) {
+            AuthenticationManager authenticationManager, MyUserDetailService myUserDetailService,
+            TokenService tokenService) {
         this.usersService = usersService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.myUserDetailService = myUserDetailService;
+        this.tokenService = tokenService;
     }
 
     public class UserAlreadyExistsException extends RuntimeException {
@@ -88,13 +98,19 @@ public class UsersController {
 
                 Users user = userOpt.get();
 
-                String token = jwtService.generateToken(
-                        org.springframework.security.core.userdetails.User
-                                .builder()
+                tokenService.deleteExpiredAccessTokens(user.getName());
+                tokenService.deleteExpiredRefreshTokens(user.getName());
+
+                String accessToken = jwtService.generateToken(
+                        org.springframework.security.core.userdetails.User.builder()
                                 .username(user.getName())
                                 .password(user.getPassword())
                                 .roles(user.getRole().name())
                                 .build());
+
+                String refreshToken = jwtService.generateRefreshToken(user);
+
+                tokenService.saveTokens(user, accessToken, refreshToken);
 
                 getUserDTO userDTO = new getUserDTO(
                         user.getId(),
@@ -103,7 +119,8 @@ public class UsersController {
                         user.getRole().name());
 
                 Map<String, Object> response = new HashMap<>();
-                response.put("token", token);
+                response.put("access", accessToken);
+                response.put("refresh", refreshToken);
                 response.put("user", userDTO);
 
                 return ResponseEntity.ok(response);
@@ -113,6 +130,34 @@ public class UsersController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refreshToken");
+
+        if (refreshToken == null || !tokenService.isRefreshTokenValid(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or missing refresh token");
+        }
+
+        String username = jwtService.extractUserEmail(refreshToken);
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid refresh token - no username found");
+        }
+
+        UserDetails userDetails = myUserDetailService.loadUserByUsername(username);
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        tokenService.deleteExpiredRefreshTokens(username);
+
+        String newAccessToken = jwtService.generateToken(userDetails);
+        String newRefreshToken = jwtService.generateRefreshToken(userDetails);
+
+        return ResponseEntity.ok(Map.of(
+                "accessToken", newAccessToken,
+                "refreshToken", newRefreshToken));
     }
 
     @GetMapping("/id/{userId}")

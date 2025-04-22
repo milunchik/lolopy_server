@@ -21,6 +21,7 @@ public class JwtService {
     public static final String SECRET = "5rWBcjsnkL6v9ZvjXS2BaDz7B9TESG6BAFW0GmKxY1n9OuCuFZarx4JQw8jVRov/TFMhxDpfSICFrDKvCIcmsg==";
 
     private static final long VALIDITY = TimeUnit.MINUTES.toMillis(60);
+    private static final long REFRESH_TOKEN_EXPIRATION = TimeUnit.DAYS.toMillis(7);
 
     private Claims getClaims(String token) {
         return Jwts.parser()
@@ -39,6 +40,16 @@ public class JwtService {
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plusMillis(VALIDITY)))
                 .signWith(generateSecretKey()).compact();
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return Jwts.builder()
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+                .signWith(generateSecretKey())
+                .compact();
+
     }
 
     public String extractUserEmail(String jwt) {

@@ -24,6 +24,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lolopy.server.auth.token.AccessToken;
+import lolopy.server.auth.token.RefreshToken;
 import lolopy.server.enums.Enums.Role;
 import lolopy.server.profiles.Profiles;
 import lolopy.server.trips.Trips;
@@ -58,6 +60,12 @@ public class Users implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id")
     private Profiles profile;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private AccessToken access;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RefreshToken refresh;
 
     @ManyToMany
     @JoinTable(name = "user_trip", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "trip_id"))
@@ -97,6 +105,11 @@ public class Users implements UserDetails {
     public Users(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public Users(String email, AccessToken access, RefreshToken refresh) {
+        this.access = access;
+        this.refresh = refresh;
     }
 
     public Long getId() {
