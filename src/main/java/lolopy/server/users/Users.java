@@ -46,11 +46,11 @@ public class Users implements UserDetails {
     private Role role;
 
     @JsonProperty("email")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @JsonProperty("name")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @JsonProperty("password")

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -76,10 +77,13 @@ public class UsersController {
     public ResponseEntity<?> createUser(@RequestBody Users user) {
         try {
             usersService.createUser(user);
-            String message = "User created";
-            return ResponseEntity.status(HttpStatus.CREATED).body(message);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "User created");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
 
@@ -90,7 +94,7 @@ public class UsersController {
                     new UsernamePasswordAuthenticationToken(loginForm.email(), loginForm.password()));
 
             if (authentication.isAuthenticated()) {
-                Optional<Users> userOpt = usersService.getUserbyName(loginForm.email());
+                Optional<Users> userOpt = usersService.getUserByEmail(loginForm.email());
 
                 if (userOpt.isEmpty()) {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -133,8 +137,19 @@ public class UsersController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
-        String refreshToken = request.get("refreshToken");
+    public ResponseEntity<?> refreshToken(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody(required = false) Map<String, String> requestBody) {
+
+        String refreshToken = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            refreshToken = authHeader.substring(7);
+        }
+
+        if (refreshToken == null && requestBody != null) {
+            refreshToken = requestBody.get("refreshToken");
+        }
 
         if (refreshToken == null || !tokenService.isRefreshTokenValid(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or missing refresh token");
