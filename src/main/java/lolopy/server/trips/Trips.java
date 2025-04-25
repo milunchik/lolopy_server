@@ -1,5 +1,7 @@
 package lolopy.server.trips;
 
+import java.util.Objects;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -187,5 +189,20 @@ public class Trips {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Trips))
+            return false;
+        Trips trip = (Trips) o;
+        return id != null && id.equals(trip.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

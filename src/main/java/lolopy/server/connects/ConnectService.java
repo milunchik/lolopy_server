@@ -47,4 +47,32 @@ public class ConnectService {
 
         return null;
     }
+
+    public UserDTO disconnectTripAndUser(Connect disconnectingTripWithUser) {
+        Optional<Users> optUser = usersRepository.findById(disconnectingTripWithUser.user_id);
+        Optional<Trips> optTrip = tripsRepository.findById(disconnectingTripWithUser.trip_id);
+
+        if (optUser.isPresent() && optTrip.isPresent()) {
+            Users user = optUser.get();
+            Trips trip = optTrip.get();
+
+            if (user.getTrips().contains(trip)) {
+                user.getTrips().remove(trip);
+            }
+
+            Users savedUser = usersRepository.save(user);
+
+            UserDTO dto = new UserDTO();
+            dto.setId(savedUser.getId());
+            dto.setEmail(savedUser.getEmail());
+            dto.setTrips(savedUser.getTrips().stream()
+                    .map(t -> new TripDTO(t.getId(), t.getDate()))
+                    .collect(Collectors.toList()));
+
+            return dto;
+        }
+
+        return null;
+    }
+
 }

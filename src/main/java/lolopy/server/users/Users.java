@@ -1,7 +1,9 @@
 package lolopy.server.users;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -70,12 +72,12 @@ public class Users implements UserDetails {
     @ManyToMany
     @JoinTable(name = "user_trip", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "trip_id"))
     @JsonIgnoreProperties("users")
-    private List<Trips> trips;
+    private Set<Trips> trips = new HashSet<>();
 
     public Users() {
     }
 
-    public Users(Long id, String name, String email, String password, List<Trips> trips, Profiles profile,
+    public Users(Long id, String name, String email, String password, Set<Trips> trips, Profiles profile,
             Role role) {
         this.id = id;
         this.name = name;
@@ -86,7 +88,7 @@ public class Users implements UserDetails {
         this.role = role;
     }
 
-    public Users(String name, String email, String password, List<Trips> trips, Role role) {
+    public Users(String name, String email, String password, Set<Trips> trips, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -174,11 +176,11 @@ public class Users implements UserDetails {
         this.password = password;
     }
 
-    public List<Trips> getTripIds() {
+    public Set<Trips> getTripIds() {
         return trips;
     }
 
-    public void setTripIds(List<Trips> trip) {
+    public void setTripIds(Set<Trips> trip) {
         this.trips = trip;
     }
 
