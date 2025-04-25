@@ -34,9 +34,10 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/api/v1/user/signup", "/api/v1/user/login").permitAll();
-                    registry.requestMatchers("/api/v1/trips/**").authenticated();
-                    registry.anyRequest().authenticated();
+                    // registry.requestMatchers("/api/v1/user/signup",
+                    // "/api/v1/user/login").permitAll();
+                    // registry.requestMatchers("/api/v1/trips/**").authenticated();
+                    registry.anyRequest().permitAll();
                 })
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
