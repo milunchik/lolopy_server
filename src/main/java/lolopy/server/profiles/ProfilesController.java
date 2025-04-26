@@ -1,7 +1,6 @@
 package lolopy.server.profiles;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lolopy.server.dtos.UpdateProfileDTO;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,19 +60,12 @@ public class ProfilesController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateTrip(@PathVariable Long id, @RequestBody Profiles updatedProfile) {
+    public ResponseEntity<?> updateTrip(@PathVariable Long id, @RequestBody UpdateProfileDTO updatedProfile) {
         try {
-            Optional<Profiles> profile = profilesService.getProfileById(id);
-
-            if (profile.isPresent()) {
-                profilesService.updateProfile(id, updatedProfile);
-                return ResponseEntity.status(HttpStatus.OK).body(profile.get());
-
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profile not found");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            Profiles updated = profilesService.updateProfile(id, updatedProfile);
+            return ResponseEntity.status(HttpStatus.OK).body(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

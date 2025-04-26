@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import lolopy.server.dtos.UpdateProfileDTO;
+
 @Service
 public class ProfilesService {
 
@@ -30,26 +32,21 @@ public class ProfilesService {
         return profilesRepository.findProfileByName(name);
     }
 
-    public Optional<Profiles> updateProfile(Long id, Profiles updatedProfile) {
-        Optional<Profiles> profile = profilesRepository.findById(id);
-
-        if (profile.isPresent()) {
-            Profiles existingProfile = profile.get();
-
-            if (updatedProfile.getName() != null) {
-                existingProfile.setName(profile.get().getName());
-            }
-            if (updatedProfile.getPassport() != null) {
-                existingProfile.setPassport(profile.get().getPassport());
-            }
-            if (updatedProfile.getClass() != null) {
-                existingProfile.setPhone(profile.get().getPhone());
-            }
-
-            profilesRepository.save(existingProfile);
-            return Optional.of(existingProfile);
-        }
-        return Optional.empty();
+    public Profiles updateProfile(Long id, UpdateProfileDTO updatedProfile) {
+        return profilesRepository.findById(id)
+                .map(existingProfile -> {
+                    if (updatedProfile.getName() != null && !updatedProfile.getName().isEmpty()) {
+                        existingProfile.setName(updatedProfile.getName());
+                    }
+                    if (updatedProfile.getPassport() != null && !updatedProfile.getPassport().isEmpty()) {
+                        existingProfile.setPassport(updatedProfile.getPassport());
+                    }
+                    if (updatedProfile.getPhone() != null && !updatedProfile.getPhone().isEmpty()) {
+                        existingProfile.setPhone(updatedProfile.getPhone());
+                    }
+                    return profilesRepository.save(existingProfile);
+                })
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
     }
 
     public boolean deleteProfile(Long id) {
