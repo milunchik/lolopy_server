@@ -59,6 +59,13 @@ public class Profiles {
         this.passport = passport;
     }
 
+    public Profiles(String name, String phone, String passport, Users user) {
+        this.name = name;
+        this.phone = phone;
+        this.passport = passport;
+        this.user = user;
+    }
+
     public Long getId() {
         return id;
     }
@@ -89,6 +96,22 @@ public class Profiles {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
 }
