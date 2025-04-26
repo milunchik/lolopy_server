@@ -10,19 +10,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lolopy.server.profiles.Profiles;
+import lolopy.server.profiles.ProfilesRepository;
 import lolopy.server.profiles.ProfilesService;
 
 @Service
 public class UsersService {
+
+    private final ProfilesRepository profilesRepository;
     private final UsersRepository usersRepository;
     private final ProfilesService profilesService;
     private PasswordEncoder passwordEncoder;
 
     public UsersService(UsersRepository usersRepository, ProfilesService profilesService,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, ProfilesRepository profilesRepository) {
         this.usersRepository = usersRepository;
         this.profilesService = profilesService;
         this.passwordEncoder = passwordEncoder;
+        this.profilesRepository = profilesRepository;
     }
 
     public List<Users> getUsers() {
@@ -35,17 +39,21 @@ public class UsersService {
         if (userByEmail.isPresent()) {
             throw new RuntimeException("User already exists");
         }
-        Profiles profile = new Profiles(user.getName(), "Default Passport", "Default Phone");
-
-        Profiles newProfile = profilesService.createProfile(profile);
-        user.setProfile(newProfile);
 
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
 
-        usersRepository.save(user);
+        Profiles profile = new Profiles(user.getName(), "Default Passport", "Default Phone");
 
-        return user;
+        user.setProfile(profile);
+
+        Users savedUser = usersRepository.save(user);
+
+        profile.setUser(savedUser);
+
+        profilesRepository.save(profile);
+
+        return savedUser;
     }
 
     public Users getUser(Users user) {

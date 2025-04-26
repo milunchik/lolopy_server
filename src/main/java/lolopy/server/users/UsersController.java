@@ -27,6 +27,7 @@ import lolopy.server.auth.MyUserDetailService;
 import lolopy.server.auth.token.TokenService;
 import lolopy.server.dtos.LoginForm;
 import lolopy.server.dtos.getUserDTO;
+import lolopy.server.dtos.getUsersTripsDTO;
 
 @RestController
 @RequestMapping(path = "api/v1/user")
@@ -270,5 +271,21 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
 
         }
+    }
+
+    @GetMapping("/trips/{id}")
+    public ResponseEntity<?> getTripsByUserId(@PathVariable Long id) {
+        try {
+            Optional<Users> user = usersService.getUserById(id);
+
+            if (user.isPresent()) {
+                getUsersTripsDTO response = new getUsersTripsDTO(id, user.get().getTrips());
+                return ResponseEntity.status(HttpStatus.FOUND).body(response);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+        return null;
     }
 }
