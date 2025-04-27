@@ -1,8 +1,8 @@
 package lolopy.server.trips;
 
-import java.util.List;
 import java.util.Optional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +14,8 @@ public class TripsService {
         this.tripsRepository = tripsRepository;
     }
 
-    public List<Trips> geTrips() {
-        return tripsRepository.findAll();
+    public Page<Trips> getTrips(Pageable pageable) {
+        return tripsRepository.findAll(pageable);
     }
 
     public Trips createTrip(Trips trip) {

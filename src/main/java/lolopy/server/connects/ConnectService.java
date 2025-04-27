@@ -48,6 +48,10 @@ public class ConnectService {
         return null;
     }
 
+    public boolean existsByTripIdAndUserId(Long tripId, Long userId) {
+        return usersRepository.existsByTripIdAndUserId(tripId, userId);
+    }
+
     public UserDTO disconnectTripAndUser(Connect disconnectingTripWithUser) {
         Optional<Users> optUser = usersRepository.findById(disconnectingTripWithUser.user_id);
         Optional<Trips> optTrip = tripsRepository.findById(disconnectingTripWithUser.trip_id);

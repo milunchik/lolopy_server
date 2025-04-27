@@ -23,13 +23,26 @@ public class ConnectController {
 
     @PatchMapping
     public ResponseEntity<?> connect(@RequestBody Connect connectingTripWithUser) {
-
         try {
+            boolean exists = connectService.existsByTripIdAndUserId(
+                    connectingTripWithUser.getTrip_id(),
+                    connectingTripWithUser.getUser_id());
+
+            if (exists) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body("The user has already had this trip ");
+            }
+
             connectService.connectTripAndUser(connectingTripWithUser);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(connectingTripWithUser);
+            return ResponseEntity
+                    .status(HttpStatus.ACCEPTED)
+                    .body(connectingTripWithUser);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
         }
     }
 
