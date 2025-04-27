@@ -201,7 +201,8 @@ public class UsersController {
             Optional<Users> userOptional = usersService.getUserByEmail(email);
             if (userOptional.isPresent()) {
                 Users user = userOptional.get();
-                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name());
+                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
+                        user.getProfile());
 
                 return ResponseEntity.ok(dto);
             } else {
@@ -280,7 +281,7 @@ public class UsersController {
 
             if (user.isPresent()) {
                 getUsersTripsDTO response = new getUsersTripsDTO(id, user.get().getTrips());
-                return ResponseEntity.status(HttpStatus.FOUND).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

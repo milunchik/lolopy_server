@@ -44,6 +44,9 @@ public class ProfilesService {
                     if (updatedProfile.getPhone() != null && !updatedProfile.getPhone().isEmpty()) {
                         existingProfile.setPhone(updatedProfile.getPhone());
                     }
+                    if (updatedProfile.getPhoto() != null && !updatedProfile.getPhoto().isEmpty()) {
+                        existingProfile.setPhoto(updatedProfile.getPhoto());
+                    }
                     return profilesRepository.save(existingProfile);
                 })
                 .orElseThrow(() -> new RuntimeException("Profile not found"));

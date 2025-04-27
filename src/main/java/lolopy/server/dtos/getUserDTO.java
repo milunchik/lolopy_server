@@ -32,6 +32,14 @@ public class getUserDTO {
         this.role = role;
     }
 
+    public getUserDTO(Long id, String email, String name, String role, Profiles profile) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.role = role;
+        this.profile = profile;
+    }
+
     public Long getId() {
         return id;
     }

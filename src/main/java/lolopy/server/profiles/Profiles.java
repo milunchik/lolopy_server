@@ -66,6 +66,10 @@ public class Profiles {
         this.user = user;
     }
 
+    public Profiles(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
