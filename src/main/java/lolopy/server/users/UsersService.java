@@ -18,13 +18,11 @@ public class UsersService {
 
     private final ProfilesRepository profilesRepository;
     private final UsersRepository usersRepository;
-    private final ProfilesService profilesService;
     private PasswordEncoder passwordEncoder;
 
     public UsersService(UsersRepository usersRepository, ProfilesService profilesService,
             PasswordEncoder passwordEncoder, ProfilesRepository profilesRepository) {
         this.usersRepository = usersRepository;
-        this.profilesService = profilesService;
         this.passwordEncoder = passwordEncoder;
         this.profilesRepository = profilesRepository;
     }
