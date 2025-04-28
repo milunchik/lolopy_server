@@ -2,6 +2,9 @@ package lolopy.server.trips;
 
 import java.util.Optional;
 
+import lolopy.server.enums.Enums.Accommodation;
+import lolopy.server.enums.Enums.FoodPlace;
+import lolopy.server.enums.Enums.Transport;
 import lolopy.server.users.Users;
 import lolopy.server.users.UsersRepository;
 import org.springframework.data.domain.Page;
@@ -20,8 +23,9 @@ public class TripsService {
         this.usersRepository = usersRepository;
     }
 
-    public Page<Trips> getTrips(Pageable pageable) {
-        return tripsRepository.findAll(pageable);
+    public Page<Trips> getTrips(Pageable pageable, Transport transport, FoodPlace foodPlace,
+            Accommodation accommodation, String country) {
+        return tripsRepository.findAllWithFilters(pageable, transport, foodPlace, accommodation, country);
     }
 
     public Trips createTrip(Trips trip) {

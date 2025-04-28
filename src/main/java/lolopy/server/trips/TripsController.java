@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import lolopy.server.enums.Enums.Accommodation;
+import lolopy.server.enums.Enums.FoodPlace;
+import lolopy.server.enums.Enums.Transport;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.core.io.FileSystemResource;
@@ -48,10 +53,14 @@ public class TripsController {
     @GetMapping
     public ResponseEntity<List<Trips>> getTrips(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Transport transport,
+            @RequestParam(required = false) FoodPlace foodPlace,
+            @RequestParam(required = false) Accommodation accommodation,
+            @RequestParam(required = false) String country) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Trips> tripsPage = tripsService.getTrips(pageable);
+        Page<Trips> tripsPage = tripsService.getTrips(pageable, transport, foodPlace, accommodation, country);
 
         return ResponseEntity.ok(tripsPage.getContent());
     }
