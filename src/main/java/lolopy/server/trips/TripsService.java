@@ -1,6 +1,9 @@
 package lolopy.server.trips;
 
 import java.util.Optional;
+
+import lolopy.server.users.Users;
+import lolopy.server.users.UsersRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -8,10 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class TripsService {
 
+    private final UsersRepository usersRepository;
+
     private final TripsRepository tripsRepository;
 
-    public TripsService(TripsRepository tripsRepository) {
+    public TripsService(TripsRepository tripsRepository, UsersRepository usersRepository) {
         this.tripsRepository = tripsRepository;
+        this.usersRepository = usersRepository;
     }
 
     public Page<Trips> getTrips(Pageable pageable) {
@@ -27,9 +33,21 @@ public class TripsService {
     }
 
     public boolean deleteTrip(Long id) {
-        Optional<Trips> trip = tripsRepository.findById(id);
+        Optional<Trips> tripOpt = tripsRepository.findById(id);
 
-        if (trip.isPresent()) {
+        if (tripOpt.isPresent()) {
+            Trips trip = tripOpt.get();
+
+            var users = usersRepository.findAll()
+                    .stream()
+                    .filter(user -> user.getTrips().contains(trip))
+                    .toList();
+
+            for (Users user : users) {
+                user.getTrips().remove(trip);
+                usersRepository.save(user);
+            }
+
             tripsRepository.deleteById(id);
             return true;
         } else {

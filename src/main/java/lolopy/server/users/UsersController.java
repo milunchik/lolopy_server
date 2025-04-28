@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -74,12 +75,17 @@ public class UsersController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Users>> getUsers(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<List<getUserDTO>> getUsers(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Users> usersPage = usersService.getUsers(pageable);
 
-        return ResponseEntity.ok(usersPage.getContent());
+        List<getUserDTO> userDTOs = usersPage.getContent().stream()
+                .map(user -> new getUserDTO(user.getId(), user.getEmail(),
+                        user.getProfile().getName(), user.getRole().name()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(userDTOs);
     }
 
     @PostMapping("/signup")
