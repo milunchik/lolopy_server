@@ -1,8 +1,9 @@
 package lolopy.server.users;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,8 +28,8 @@ public class UsersService {
         this.profilesRepository = profilesRepository;
     }
 
-    public List<Users> getUsers() {
-        return usersRepository.findAll();
+    public Page<Users> getUsers(Pageable pageable) {
+        return usersRepository.findAll(pageable);
     }
 
     public Users createUser(Users user) {
