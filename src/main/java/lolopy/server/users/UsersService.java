@@ -2,6 +2,7 @@ package lolopy.server.users;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lolopy.server.profiles.Profiles;
 import lolopy.server.profiles.ProfilesRepository;
 import lolopy.server.profiles.ProfilesService;
@@ -20,6 +23,8 @@ public class UsersService {
     private final ProfilesRepository profilesRepository;
     private final UsersRepository usersRepository;
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private EntityManager entityManager;
 
     public UsersService(UsersRepository usersRepository, ProfilesService profilesService,
             PasswordEncoder passwordEncoder, ProfilesRepository profilesRepository) {
@@ -110,15 +115,24 @@ public class UsersService {
         return Optional.empty();
     }
 
+    @Transactional
     public boolean deleteById(Long id) {
-        Optional<Users> user = usersRepository.findById(id);
+        Optional<Users> userOpt = usersRepository.findById(id);
 
-        if (user.isPresent()) {
-            usersRepository.deleteById(id);
+        if (userOpt.isPresent()) {
+            Users user = userOpt.get();
+
+            if (user.getProfile() != null) {
+                user.getProfile().setUser(null);
+                user.setProfile(null);
+            }
+
+            entityManager.flush();
+            usersRepository.delete(user);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
