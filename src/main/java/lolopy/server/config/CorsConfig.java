@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:9000")
+                        .allowedOrigins("http://localhost:9000", "https://lolopy-client.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE",
                                 "OPTIONS")
                         .allowedHeaders("*")
