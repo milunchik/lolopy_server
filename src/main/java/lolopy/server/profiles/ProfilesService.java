@@ -6,14 +6,18 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import lolopy.server.dtos.UpdateProfileDTO;
+import lolopy.server.users.Users;
+import lolopy.server.users.UsersRepository;
 
 @Service
 public class ProfilesService {
 
     private final ProfilesRepository profilesRepository;
+    private final UsersRepository usersRepository;
 
-    public ProfilesService(ProfilesRepository profilesRepository) {
+    public ProfilesService(ProfilesRepository profilesRepository, UsersRepository usersRepository) {
         this.profilesRepository = profilesRepository;
+        this.usersRepository = usersRepository;
     }
 
     public List<Profiles> getProfiles() {
@@ -33,7 +37,14 @@ public class ProfilesService {
     }
 
     public Profiles updateProfile(Long id, UpdateProfileDTO updatedProfile) {
-        return profilesRepository.findById(id)
+        Users user = usersRepository.findUserByProfile(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (updatedProfile.getName() != null && !updatedProfile.getName().isEmpty()) {
+            user.setName(updatedProfile.getName());
+        }
+
+        usersRepository.save(user);
+        Profiles profile = profilesRepository.findById(id)
                 .map(existingProfile -> {
                     if (updatedProfile.getName() != null && !updatedProfile.getName().isEmpty()) {
                         existingProfile.setName(updatedProfile.getName());
@@ -50,6 +61,8 @@ public class ProfilesService {
                     return profilesRepository.save(existingProfile);
                 })
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+        return profile;
     }
 
     public boolean deleteProfile(Long id) {

@@ -2,7 +2,6 @@ package lolopy.server.users;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
@@ -11,8 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lolopy.server.auth.token.AccessTokenRepository;
+import lolopy.server.auth.token.RefreshTokenRepository;
 import lolopy.server.profiles.Profiles;
 import lolopy.server.profiles.ProfilesRepository;
 import lolopy.server.profiles.ProfilesService;
@@ -20,17 +20,22 @@ import lolopy.server.profiles.ProfilesService;
 @Service
 public class UsersService {
 
+    private final AccessTokenRepository accessTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    
     private final ProfilesRepository profilesRepository;
     private final UsersRepository usersRepository;
+
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private EntityManager entityManager;
 
     public UsersService(UsersRepository usersRepository, ProfilesService profilesService,
-            PasswordEncoder passwordEncoder, ProfilesRepository profilesRepository) {
+            PasswordEncoder passwordEncoder, ProfilesRepository profilesRepository,
+            RefreshTokenRepository refreshTokenRepository, AccessTokenRepository accessTokenRepository) {
         this.usersRepository = usersRepository;
         this.passwordEncoder = passwordEncoder;
         this.profilesRepository = profilesRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.accessTokenRepository = accessTokenRepository;
     }
 
     public Page<Users> getUsers(Pageable pageable) {
@@ -82,6 +87,11 @@ public class UsersService {
         return usersRepository.findUserByName(name);
     }
 
+    public Users getUserByProfileId(Long profileId) {
+        return usersRepository.findUserByProfile(profileId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
     public Optional<Users> updateUser(Long id, Users updatedUser) {
         Optional<Users> userOptional = usersRepository.findById(id);
 
@@ -116,22 +126,32 @@ public class UsersService {
     }
 
     @Transactional
-    public boolean deleteById(Long id) {
-        Optional<Users> userOpt = usersRepository.findById(id);
+    public boolean deleteUserById(Long userId) {
 
-        if (userOpt.isPresent()) {
-            Users user = userOpt.get();
+        Optional<Users> optionalUser = usersRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            Users user = optionalUser.get();
+
+            if (user.getAccess() != null) {
+                user.getAccess().setUser(null);
+                accessTokenRepository.save(user.getAccess());
+                user.setAccess(null);
+            }
+
+            if (user.getRefresh() != null) {
+                user.getRefresh().setUser(null);
+                refreshTokenRepository.save(user.getRefresh());
+                user.setRefresh(null);
+            }
 
             if (user.getProfile() != null) {
-                user.getProfile().setUser(null);
                 user.setProfile(null);
             }
 
-            entityManager.flush();
             usersRepository.delete(user);
+
             return true;
         }
-
         return false;
     }
 

@@ -33,12 +33,12 @@ public class SecurityConfig {
             throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(registry -> {
-                    // registry.requestMatchers("/api/v1/user/signup",
-                    // "/api/v1/user/login").permitAll();
-                    // registry.requestMatchers("/api/v1/trips/**").authenticated();
-                    registry.anyRequest().permitAll();
-                })
+                .authorizeHttpRequests(registry ->
+
+                registry.requestMatchers("/api/v1/user/signup").permitAll()
+                        .requestMatchers("/api/v1/user/login").permitAll()
+                        .requestMatchers("/api/v1/user/").hasRole("ADMIN")
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -272,7 +272,7 @@ public class UsersController {
             Optional<Users> user = usersService.getUserById(id);
 
             if (user.isPresent()) {
-                boolean isDeleted = usersService.deleteById(id);
+                boolean isDeleted = usersService.deleteUserById(id);
 
                 if (isDeleted) {
                     return ResponseEntity.status(HttpStatus.OK).body("User deleted");
