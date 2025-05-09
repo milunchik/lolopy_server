@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lolopy.server.auth.CustomUserDetails;
 import lolopy.server.auth.JwtService;
 import lolopy.server.auth.MyUserDetailService;
 import lolopy.server.auth.token.TokenService;
@@ -82,8 +83,10 @@ public class UsersController {
         Page<Users> usersPage = usersService.getUsers(pageable);
 
         List<GetUserDTO> userDTOs = usersPage.getContent().stream()
-                .map(user -> new GetUserDTO(user.getId(), user.getEmail(),
-                        user.getProfile().getName(), user.getRole().name()))
+                .map(user -> {
+                    String profileName = user.getProfile() != null ? user.getProfile().getName() : null;
+                    return new GetUserDTO(user.getId(), user.getEmail(), profileName, user.getRole().name());
+                })
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(userDTOs);
@@ -118,17 +121,13 @@ public class UsersController {
 
                 Users user = userOpt.get();
 
+                CustomUserDetails customUserDetails = new CustomUserDetails(user);
+
                 tokenService.deleteExpiredAccessTokens(user.getName());
                 tokenService.deleteExpiredRefreshTokens(user.getName());
 
-                String accessToken = jwtService.generateToken(
-                        org.springframework.security.core.userdetails.User.builder()
-                                .username(user.getName())
-                                .password(user.getPassword())
-                                .roles(user.getRole().name())
-                                .build());
-
-                String refreshToken = jwtService.generateRefreshToken(user);
+                String accessToken = jwtService.generateToken(customUserDetails);
+                String refreshToken = jwtService.generateRefreshToken(customUserDetails);
 
                 tokenService.saveTokens(user, accessToken, refreshToken);
 
@@ -180,10 +179,12 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
+        CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+
         tokenService.deleteExpiredRefreshTokens(username);
 
-        String newAccessToken = jwtService.generateToken(userDetails);
-        String newRefreshToken = jwtService.generateRefreshToken(userDetails);
+        String newAccessToken = jwtService.generateToken(customUserDetails);
+        String newRefreshToken = jwtService.generateRefreshToken(customUserDetails);
 
         return ResponseEntity.ok(Map.of(
                 "accessToken", newAccessToken,

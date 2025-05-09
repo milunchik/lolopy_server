@@ -26,19 +26,9 @@ public class MyUserDetailService implements UserDetailsService {
         Optional<Users> user = usersService.getUserByEmail(email);
         if (user.isPresent()) {
             Users userObj = user.get();
-            return org.springframework.security.core.userdetails.User
-                    .builder()
-                    .username(userObj.getEmail())
-                    .password(userObj.getPassword())
-                    .roles(getRole(userObj))
-                    .build();
+            return new CustomUserDetails(userObj);
         } else {
             throw new UsernameNotFoundException(email);
         }
     }
-
-    private String getRole(Users user) {
-        return user.getRole().name();
-    }
-
 }
