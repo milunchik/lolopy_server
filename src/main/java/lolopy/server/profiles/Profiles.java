@@ -39,7 +39,7 @@ public class Profiles {
     private String photo;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private Users user;
 

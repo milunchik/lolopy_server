@@ -42,10 +42,9 @@ public class Users implements UserDetails {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_sequence")
     private Long id;
 
-    @JsonProperty("role")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private Role role = Role.USER;
 
     @JsonProperty("email")
     @Column(nullable = false, unique = true)
@@ -59,8 +58,7 @@ public class Users implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_id")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profiles profile;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -75,39 +73,33 @@ public class Users implements UserDetails {
     private Set<Trips> trips = new HashSet<>();
 
     public Users() {
+        this.role = Role.USER;
     }
 
-    public Users(Long id, String name, String email, String password, Set<Trips> trips, Profiles profile,
-            Role role) {
+    public Users(Long id, String name, String email, String password, Set<Trips> trips, Profiles profile) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.trips = trips;
         this.profile = profile;
-        this.role = role;
+        this.role = Role.USER;
     }
 
-    public Users(String name, String email, String password, Set<Trips> trips, Role role) {
+    public Users(String name, String email, String password, Set<Trips> trips) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.trips = trips;
-        this.role = role;
+        this.role = Role.USER;
 
-    }
-
-    public Users(String name, String email, String password, Role role) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
     }
 
     public Users(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = Role.USER;
     }
 
     public Users(String email, String password) {

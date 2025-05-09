@@ -31,8 +31,9 @@ import lolopy.server.auth.JwtService;
 import lolopy.server.auth.MyUserDetailService;
 import lolopy.server.auth.token.TokenService;
 import lolopy.server.dtos.LoginForm;
-import lolopy.server.dtos.getUserDTO;
-import lolopy.server.dtos.getUsersTripsDTO;
+import lolopy.server.dtos.GetLoginnedUserDTO;
+import lolopy.server.dtos.GetUserDTO;
+import lolopy.server.dtos.GetUsersTripsDTO;
 
 @RestController
 @RequestMapping(path = "api/v1/user")
@@ -75,13 +76,13 @@ public class UsersController {
     }
 
     @GetMapping
-    public ResponseEntity<List<getUserDTO>> getUsers(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<List<GetUserDTO>> getUsers(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Users> usersPage = usersService.getUsers(pageable);
 
-        List<getUserDTO> userDTOs = usersPage.getContent().stream()
-                .map(user -> new getUserDTO(user.getId(), user.getEmail(),
+        List<GetUserDTO> userDTOs = usersPage.getContent().stream()
+                .map(user -> new GetUserDTO(user.getId(), user.getEmail(),
                         user.getProfile().getName(), user.getRole().name()))
                 .collect(Collectors.toList());
 
@@ -131,12 +132,11 @@ public class UsersController {
 
                 tokenService.saveTokens(user, accessToken, refreshToken);
 
-                getUserDTO userDTO = new getUserDTO(
+                GetLoginnedUserDTO userDTO = new GetLoginnedUserDTO(
                         user.getId(),
                         user.getEmail(),
                         user.getName(),
-                        user.getRole().name());
-
+                        user.getRole());
                 Map<String, Object> response = new HashMap<>();
                 response.put("access", accessToken);
                 response.put("refresh", refreshToken);
@@ -197,7 +197,7 @@ public class UsersController {
             if (userOptional.isPresent()) {
                 Users user = userOptional.get();
 
-                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
+                GetUserDTO dto = new GetUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
                         user.getProfile(), user.getTrips());
 
                 return ResponseEntity.ok(dto);
@@ -215,7 +215,7 @@ public class UsersController {
             Optional<Users> userOptional = usersService.getUserByEmail(email);
             if (userOptional.isPresent()) {
                 Users user = userOptional.get();
-                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
+                GetUserDTO dto = new GetUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
                         user.getProfile());
 
                 return ResponseEntity.ok(dto);
@@ -234,7 +234,7 @@ public class UsersController {
             if (userOptional.isPresent()) {
                 Users user = userOptional.get();
 
-                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
+                GetUserDTO dto = new GetUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
                         user.getProfile(), user.getTrips());
 
                 return ResponseEntity.ok(dto);
@@ -254,7 +254,7 @@ public class UsersController {
             if (userOptional.isPresent()) {
                 Users user = userOptional.get();
 
-                getUserDTO dto = new getUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
+                GetUserDTO dto = new GetUserDTO(user.getId(), user.getEmail(), user.getName(), user.getRole().name(),
                         user.getProfile(), user.getTrips());
 
                 return ResponseEntity.ok(dto);
@@ -294,7 +294,7 @@ public class UsersController {
             Optional<Users> user = usersService.getUserById(id);
 
             if (user.isPresent()) {
-                getUsersTripsDTO response = new getUsersTripsDTO(id, user.get().getTrips());
+                GetUsersTripsDTO response = new GetUsersTripsDTO(id, user.get().getTrips());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         } catch (Exception e) {

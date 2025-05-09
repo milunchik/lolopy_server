@@ -1,5 +1,7 @@
 package lolopy.server.auth.token;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lolopy.server.users.Users;
 import lombok.Data;
@@ -18,7 +20,7 @@ public class AccessToken {
     private String tokenType;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true)
+    @JsonBackReference
     private Users user;
 
     private boolean isExpired;

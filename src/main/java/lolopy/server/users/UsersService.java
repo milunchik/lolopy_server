@@ -22,7 +22,7 @@ public class UsersService {
 
     private final AccessTokenRepository accessTokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
-    
+
     private final ProfilesRepository profilesRepository;
     private final UsersRepository usersRepository;
 
@@ -145,6 +145,7 @@ public class UsersService {
             }
 
             if (user.getProfile() != null) {
+                user.getProfile().setUser(null);
                 user.setProfile(null);
             }
 
