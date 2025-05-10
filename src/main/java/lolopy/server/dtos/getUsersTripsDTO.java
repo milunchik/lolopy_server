@@ -4,14 +4,14 @@ import java.util.Set;
 
 import lolopy.server.trips.Trips;
 
-public class getUsersTripsDTO {
+public class GetUsersTripsDTO {
     private Long id;
     private Set<Trips> trips;
 
-    public getUsersTripsDTO() {
+    public GetUsersTripsDTO() {
     }
 
-    public getUsersTripsDTO(Long id, Set<Trips> trips) {
+    public GetUsersTripsDTO(Long id, Set<Trips> trips) {
         this.id = id;
         this.trips = trips;
     }

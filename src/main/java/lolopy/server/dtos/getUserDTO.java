@@ -5,7 +5,7 @@ import java.util.Set;
 import lolopy.server.profiles.Profiles;
 import lolopy.server.trips.Trips;
 
-public class getUserDTO {
+public class GetUserDTO {
     private Long id;
     private String email;
     private String name;
@@ -13,10 +13,10 @@ public class getUserDTO {
     private Profiles profile;
     private Set<Trips> trips;
 
-    public getUserDTO() {
+    public GetUserDTO() {
     }
 
-    public getUserDTO(Long id, String email, String name, String role, Profiles profile, Set<Trips> trips) {
+    public GetUserDTO(Long id, String email, String name, String role, Profiles profile, Set<Trips> trips) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -25,14 +25,14 @@ public class getUserDTO {
         this.trips = trips;
     }
 
-    public getUserDTO(Long id, String email, String name, String role) {
+    public GetUserDTO(Long id, String email, String name, String role) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.role = role;
     }
 
-    public getUserDTO(Long id, String email, String name, String role, Profiles profile) {
+    public GetUserDTO(Long id, String email, String name, String role, Profiles profile) {
         this.id = id;
         this.email = email;
         this.name = name;

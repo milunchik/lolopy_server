@@ -135,7 +135,8 @@ public class UsersController {
                         user.getId(),
                         user.getEmail(),
                         user.getName(),
-                        user.getRole());
+                        user.getRole(),
+                        user.getProfile());
                 Map<String, Object> response = new HashMap<>();
                 response.put("access", accessToken);
                 response.put("refresh", refreshToken);

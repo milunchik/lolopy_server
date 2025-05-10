@@ -52,7 +52,7 @@ public class UsersService {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
 
-        Profiles profile = new Profiles(user.getName(), "Default Passport", "Default Phone");
+        Profiles profile = new Profiles(user.getName(), "Default Phone", "Default Passport");
 
         user.setProfile(profile);
 
