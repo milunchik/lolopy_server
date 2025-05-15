@@ -116,7 +116,7 @@ public class UsersController {
                 Optional<Users> userOpt = usersService.getUserByEmail(loginForm.email());
 
                 if (userOpt.isEmpty()) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Користувача не знайдено");
                 }
 
                 Users user = userOpt.get();
@@ -144,7 +144,7 @@ public class UsersController {
 
                 return ResponseEntity.ok(response);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Авторизація не пройшла");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

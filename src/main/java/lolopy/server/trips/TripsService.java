@@ -1,5 +1,6 @@
 package lolopy.server.trips;
 
+import java.util.List;
 import java.util.Optional;
 
 import lolopy.server.enums.Enums.Accommodation;
@@ -23,8 +24,8 @@ public class TripsService {
         this.usersRepository = usersRepository;
     }
 
-    public Page<Trips> getTrips(Pageable pageable, Transport transport, FoodPlace foodPlace,
-            Accommodation accommodation, String country) {
+    public Page<Trips> getTrips(Pageable pageable, List<Transport> transport, List<FoodPlace> foodPlace,
+            List<Accommodation> accommodation, String country) {
         return tripsRepository.findAllWithFilters(pageable, transport, foodPlace, accommodation, country);
     }
 

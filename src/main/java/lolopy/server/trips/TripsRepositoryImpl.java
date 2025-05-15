@@ -22,8 +22,8 @@ public class TripsRepositoryImpl implements TripsRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public Page<Trips> findAllWithFilters(Pageable pageable, Transport transport, FoodPlace foodPlace,
-            Accommodation accommodation, String country) {
+    public Page<Trips> findAllWithFilters(Pageable pageable, List<Transport> transports, List<FoodPlace> foodPlaces,
+            List<Accommodation> accommodations, String country) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<Trips> query = cb.createQuery(Trips.class);
@@ -31,14 +31,14 @@ public class TripsRepositoryImpl implements TripsRepositoryCustom {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (transport != null) {
-            predicates.add(cb.equal(trip.get("transport"), transport));
+        if (transports != null && !transports.isEmpty()) {
+            predicates.add(trip.get("transport").in(transports));
         }
-        if (foodPlace != null) {
-            predicates.add(cb.equal(trip.get("foodPlace"), foodPlace));
+        if (foodPlaces != null && !foodPlaces.isEmpty()) {
+            predicates.add(trip.get("foodPlace").in(foodPlaces));
         }
-        if (accommodation != null) {
-            predicates.add(cb.equal(trip.get("accommodation"), accommodation));
+        if (accommodations != null && !accommodations.isEmpty()) {
+            predicates.add(trip.get("accommodation").in(accommodations));
         }
         if (country != null && !country.isBlank()) {
             predicates.add(cb.equal(trip.get("country"), country));
@@ -56,14 +56,14 @@ public class TripsRepositoryImpl implements TripsRepositoryCustom {
 
         List<Predicate> countPredicates = new ArrayList<>();
 
-        if (transport != null) {
-            countPredicates.add(cb.equal(countRoot.get("transport"), transport));
+        if (transports != null && !transports.isEmpty()) {
+            countPredicates.add(countRoot.get("transport").in(transports));
         }
-        if (foodPlace != null) {
-            countPredicates.add(cb.equal(countRoot.get("foodPlace"), foodPlace));
+        if (foodPlaces != null && !foodPlaces.isEmpty()) {
+            countPredicates.add(countRoot.get("foodPlace").in(foodPlaces));
         }
-        if (accommodation != null) {
-            countPredicates.add(cb.equal(countRoot.get("accommodation"), accommodation));
+        if (accommodations != null && !accommodations.isEmpty()) {
+            countPredicates.add(countRoot.get("accommodation").in(accommodations));
         }
         if (country != null && !country.isBlank()) {
             countPredicates.add(cb.equal(countRoot.get("country"), country));

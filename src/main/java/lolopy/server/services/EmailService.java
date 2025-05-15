@@ -165,26 +165,26 @@ public class EmailService {
               <body>
                 <div class="emailWrapper">
                   <div class="banner">
-                    <img src="https://i.ibb.co/NgsXshZ6/travel-stickers-badge-set-vector.png" alt="Travel Banner" />
+                     <img src="https://i.ibb.co/JRzMGk92/travel-stickers-badge-set-vector.png" alt="Travel-Banner" >
                   </div>
                   <div class="titleContainer">
-                    <h1>Your Trip Has Been Successfully Booked</h1>
+                    <h1>Ваша подорож запланована</h1>
                   </div>
                   <div class="tripInfoContainer">
-                    <h2>Trip Details</h2>
-                    <p>📍 <strong>Destination:</strong> %s / %s</p>
-                    <p>📅 <strong>Date:</strong> %s</p>
-                    <p>👥 <strong>Capacity:</strong> %s</p>
-                    <p>🏨 <strong>Accommodation:</strong> %s</p>
-                    <p>🚌 <strong>Transport:</strong> %s</p>
+                    <h2>Деталі подорожі:</h2>
+                    <p>📍 <strong>Маршрут:</strong> %s / %s</p>
+                    <p>📅 <strong>Дата:</strong> %s</p>
+                    <p>👥 <strong>Кількість осіб:</strong> %s</p>
+                    <p>🏨 <strong>Житло:</strong> %s</p>
+                    <p>🚌 <strong>Транспорт:</strong> %s</p>
                   </div>
                   <div class="companyInfo">
-                    <img src="https://i.ibb.co/wFMFk0z4/Group-68.png" alt="Lolopy Logo" />
-                    <strong>Lolopy Travel</strong>
-                    <p>Email: <a href="mailto:support@travelnow.com">support@travelnow.com</a></p>
-                    <p>Phone: <a href="tel:+12345678901">+1 (234) 567-8901</a></p>
-                    <p>Address: 123 Sunny Street, Uzhhorod, FL 33101, Ukraine</p>
-                    <small>This message was sent to you because you booked a trip with Lolopy Travel.</small>
+                   <img src="https://i.ibb.co/hFc3Z9yW/Logo-blue.png" alt="Logo-blue">
+                    <strong>Lolopy</strong>
+                    <p>Електронна адреса: <a href="mailto:support@travelnow.com">support@travelnow.com</a></p>
+                    <p>Телефон: <a href="tel:+12345678901">+1 (234) 567-8901</a></p>
+                    <p>Адреса: Вулиця Сонячна 123, Ужгород, FL 33101, Україна</p>
+                    <small>Це повідомлення надіслано, адже ви забронювали подорож через сервіс Lolopy.</small>
                   </div>
                 </div>
               </body>
@@ -325,22 +325,22 @@ public class EmailService {
                       <body>
                         <div class="emailWrapper">
                           <div class="titleContainer">
-                            <h1>Welcome to Lolopy Travel!</h1>
+                            <h1>Вітаємо на сайті Lolopy!</h1>
                           </div>
 
                           <div class="mainMessage">
-                            <p>🎉 Your registration on <span class="highlight">Lolopy Travel</span> was successful!</p>
-                            <p>We're thrilled to have you on board. You can now start exploring amazing destinations and plan unforgettable trips with ease.</p>
-                            <p>If you have any questions or need help, don't hesitate to reach out.</p>
+                            <p>🎉 Ваша реєстрація на сайті <span class="highlight">Lolopy</span> пройшла успішно!</p>
+                            <p>Ми дуже раді, що ви на борту. Тепер ви можете почати досліджувати дивовижні місця та з легкістю планувати незабутні подорожі.</p>
+                            <p>Якщо у вас виникли запитання або потрібна допомога, не соромтеся зв’язатися.</p>
                           </div>
 
                           <div class="companyInfo">
-                            <img src="https://i.ibb.co/wFMFk0z4/Group-68.png" alt="Lolopy Logo" />
-                            <strong>Lolopy Travel</strong>
-                            <p>Email: <a href="mailto:support@travelnow.com">support@travelnow.com</a></p>
-                            <p>Phone: <a href="tel:+12345678901">+1 (234) 567-8901</a></p>
-                            <p>Address: 123 Sunny Street, Uzhhorod, FL 33101, Ukraine</p>
-                            <small>You received this message because you registered with Lolopy Travel.</small>
+                           <img src="https://i.ibb.co/hFc3Z9yW/Logo-blue.png" alt="Logo-blue">
+                            <strong>Lolopy</strong>
+                            <p>Електронна адреса: <a href="mailto:support@travelnow.com">support@travelnow.com</a></p>
+                            <p>Телефон: <a href="tel:+12345678901">+1 (234) 567-8901</a></p>
+                            <p>Адреса: Вулиця Сонячна 123, Ужгород, FL 33101, Україна</p>
+                            <small>Ви отримали це повідолмення після успішної авторизації на сайті Lolopy.</small>
                           </div>
                         </div>
                       </body>

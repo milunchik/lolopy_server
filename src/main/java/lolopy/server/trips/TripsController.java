@@ -54,9 +54,9 @@ public class TripsController {
     public ResponseEntity<List<Trips>> getTrips(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) Transport transport,
-            @RequestParam(required = false) FoodPlace foodPlace,
-            @RequestParam(required = false) Accommodation accommodation,
+            @RequestParam(required = false) List<Transport> transport,
+            @RequestParam(required = false) List<FoodPlace> foodPlace,
+            @RequestParam(required = false) List<Accommodation> accommodation,
             @RequestParam(required = false) String country) {
 
         Pageable pageable = PageRequest.of(page, size);
