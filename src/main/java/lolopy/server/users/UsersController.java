@@ -182,14 +182,19 @@ public class UsersController {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
 
+        tokenService.invalidateToken(refreshToken);
+
         tokenService.deleteExpiredRefreshTokens(username);
 
         String newAccessToken = jwtService.generateToken(customUserDetails);
         String newRefreshToken = jwtService.generateRefreshToken(customUserDetails);
+        tokenService.saveTokens(customUserDetails.getUser(), newAccessToken, newRefreshToken);
 
         return ResponseEntity.ok(Map.of(
                 "accessToken", newAccessToken,
-                "refreshToken", newRefreshToken));
+                "refreshToken", newRefreshToken,
+                "tokenType", "Bearer",
+                "expiresIn", 3600));
     }
 
     @GetMapping("/id/{userId}")

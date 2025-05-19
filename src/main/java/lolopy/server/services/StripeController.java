@@ -28,7 +28,7 @@ public class StripeController {
 
                 SessionCreateParams params = SessionCreateParams.builder()
                                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                                .setSuccessUrl("https://lolopy-client.vercel.app/")
+                                .setSuccessUrl("http://localhost:9000/")
                                 .setCancelUrl("http://localhost:9000/")
                                 .addLineItem(
                                                 SessionCreateParams.LineItem.builder()

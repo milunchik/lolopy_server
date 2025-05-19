@@ -35,11 +35,11 @@ public class SecurityConfig {
         return httpSecurity
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(registry ->
-                registry.requestMatchers("/api/v1/user/signup").permitAll()
-                .requestMatchers("/api/v1/user/login").permitAll()
-                .requestMatchers("/api/v1/trips").permitAll()
-                .anyRequest().authenticated())
+                .authorizeHttpRequests(registry -> registry.requestMatchers("/api/v1/user/signup").permitAll()
+                        .requestMatchers("/api/v1/user/login").permitAll()
+                        .requestMatchers("/api/v1/trips").permitAll()
+                        .requestMatchers("/api/v1/profile/**").permitAll()
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -19,8 +19,7 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> 
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM RefreshToken rt WHERE rt.user = :user")
-    void deleteByUser(@Param("user") Users user);
-    
+    @Query("DELETE FROM AccessToken at WHERE at.user.email = :email AND at.isExpired=true")
+    void deleteByUser(@Param("email") String email);
 
 }

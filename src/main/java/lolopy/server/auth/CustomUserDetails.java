@@ -18,11 +18,11 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail(); 
+        return user.getEmail();
     }
 
     public String getEmail() {
-        return user.getEmail(); 
+        return user.getEmail();
     }
 
     @Override
@@ -53,5 +53,9 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Users getUser() {
+        return user;
     }
 }

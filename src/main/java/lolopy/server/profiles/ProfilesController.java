@@ -36,7 +36,7 @@ public class ProfilesController {
     private final ProfilesRepository profilesRepository;
 
     private final ProfilesService profilesService;
-    private static final String uploadDir = "C:/Users/Mila/Desktop/lolopy/server/";
+    private static final String uploadDir = "C:/Users/Mila/Desktop/projects/lolopy/server/";
 
     public ProfilesController(ProfilesService profilesService,
             ProfilesRepository profilesRepository) {
@@ -91,7 +91,12 @@ public class ProfilesController {
         Profiles profile = profilesService.getProfileById(profileId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found"));
         String photoPath = profile.getPhoto();
-        Path filePath = Paths.get(uploadDir, photoPath);
+        if (photoPath.startsWith("/")) {
+            photoPath = photoPath.substring(1);
+        }
+
+        Path filePath = Paths.get(uploadDir, photoPath).toAbsolutePath();
+        System.out.println("Looking for photo at: " + filePath);
 
         if (Files.exists(filePath)) {
             Resource resource = new FileSystemResource(filePath);
@@ -125,7 +130,10 @@ public class ProfilesController {
 
         try {
             String uploadDir = "uploads/avatars/";
-            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+            String fileName = UUID.randomUUID().toString() + fileExtension;
             Path uploadPath = Paths.get(uploadDir);
 
             if (!Files.exists(uploadPath)) {
